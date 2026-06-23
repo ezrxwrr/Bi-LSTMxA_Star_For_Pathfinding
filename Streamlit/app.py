@@ -7,6 +7,8 @@ import json
 import os
 from sklearn.preprocessing import MinMaxScaler
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 class TrajectoryLSTM(nn.Module):
     def __init__(self):
         super().__init__()
@@ -24,7 +26,7 @@ st.title("Pedestrian Trajectory Prediction")
 @st.cache_resource
 def load_model():
     model = TrajectoryLSTM()
-    model_path = r"C:\Users\Pavilion\Documents\Tugas\Semester 4\RTI\Streamlit\model_prediksi_rintangan_pro.pth"
+    model_path = os.path.join(BASE_DIR, "model_prediksi_rintangan_pro.pth")
     model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
     model.eval()
     return model
@@ -33,7 +35,7 @@ model = load_model()
 
 @st.cache_data
 def load_data():
-    data_path = r"C:\Users\Pavilion\Documents\Tugas\Semester 4\RTI\Streamlit\sample.json"
+    data_path = os.path.join(BASE_DIR, "sample.json")
     if not os.path.exists(data_path):
         return None
     with open(data_path, 'r') as f:
@@ -89,7 +91,6 @@ else:
         ax.legend()
         ax.grid(True)
         
-        # Enforce equal aspect ratio and set fixed window size
         ax.set_aspect('equal', adjustable='datalim')
         
         center_x = past_np[-1, 0]
